@@ -55,13 +55,32 @@ static const int GRID_COLUMNS = 10;
             // this is shorthand to access an array inside an array
             _gridArray[i][j] = creature;
             
-            creature.isAlive = YES;
-            
             x += _cellWidth;
         }
         
         y += _cellHeight;
     }
+}
+
+- (void)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event
+{
+    // get the x,y coordinates of the touch
+    CGPoint touchLocation = [touch locationInNode:self];
+    
+    // get the Creature at that location
+    Creature *creature = [self creatureForTouchPosition:touchLocation];
+    
+    // invert its state - kill it if it's alive, bring it to life if it's dead.
+    creature.isAlive = !creature.isAlive;
+}
+
+- (Creature *)creatureForTouchPosition:(CGPoint)touchPosition
+{
+    // get the row and column that was touched, return the Creature instide the corresponding cell
+    int row = touchPosition.y / _cellHeight;
+    int column = touchPosition.x / _cellWidth;
+    
+    return _gridArray[row][column];
 }
 
 @end
